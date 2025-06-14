@@ -1,0 +1,27 @@
+schemas:
+  Error:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      message:
+        type: string
+      code:
+        type: string
+
+# The following are HTTP responses
+# so they have 'description' and 'content' fields
+UnauthorizedError:
+  description: Unauthorized
+  content:
+    application/json:
+      schema:
+        $ref: '#/schemas/Error'
+
+NotFoundError:
+  description: Resourse not found
+  content:
+    application/json:
+      schema:
+        $ref: '#/schemas/Error'

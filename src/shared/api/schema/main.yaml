@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  title: Miro-copy API
+  description: Contract for the miro board copy
+  version: 0.0.1
+paths:
+  /boards:
+    get:
+      $ref: "./endpoints/boards.yaml#/getAllBoards"
+
+    post:
+      $ref: "./endpoints/boards.yaml#/createBoard"
+  
+  /boards/{id}:
+    delete:
+      $ref: "./endpoints/boards.yaml#/deleteBoard"

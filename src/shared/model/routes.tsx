@@ -7,14 +7,14 @@ export const ROUTES = {
     LOGIN: "/login",
     REGISTER: "/register",
     BOARDS: "/boards",
-    BOARD: "/board/:boardId",
+    BOARD: "/board/:id",
 } as const;
 
 // активируется и делается доступным на весь проект ниже при декларации модуля
 // нужен для того, чтобы редиректы были типизированными
 export type PathParams = {
     [ROUTES.BOARD]: {
-        boardId: string,
+        id: string,
     } 
 }
 
