@@ -1,0 +1,74 @@
+schemas:
+  User:
+    type: object
+    required:
+      - id
+      - username
+    properties:
+      id:
+        type: string
+      username:
+        type: string
+  CredentialsRequestBody:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+        format: password
+
+  AuthorizedResponse:
+    type: object
+    required:
+      - accessToken
+      - user
+    properties:
+      accessToken:
+        type: string
+      user:
+        $ref: "#/schemas/User"
+
+login:
+  summary: Provide credentials and get a token
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/schemas/CredentialsRequestBody'
+  responses:
+    '200':
+      description: Authorization successfull
+      content:
+        application/json:
+          # it is better to keep only the schema in the reused code since,
+          # I guess, we might wanna add different MIME-types to the openapi schema?
+          schema:
+            $ref: '#/schemas/AuthorizedResponse'
+    '400':
+      $ref: '../shared/responses.yaml#/BadRequestError'
+    '404':
+      $ref: '../shared/responses.yaml#/NotFoundError'
+
+register:
+  summary: Provide credentials and get a token
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/schemas/CredentialsRequestBody'
+  responses:
+    '201':
+      description: Authorization successfull
+      content:
+        application/json:
+          # Same here
+          schema:
+            $ref: '#/schemas/AuthorizedResponse'
+    '400':
+      $ref: '../shared/responses.yaml#/BadRequestError'

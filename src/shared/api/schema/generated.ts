@@ -4,6 +4,89 @@
  */
 
 export interface paths {
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Provide credentials and get a token */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CredentialsRequestBody"];
+                };
+            };
+            responses: {
+                /** @description Authorization successfull */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthorizedResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                404: components["responses"]["NotFoundError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Provide credentials and get a token */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CredentialsRequestBody"];
+                };
+            };
+            responses: {
+                /** @description Authorization successfull */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthorizedResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/boards": {
         parameters: {
             query?: never;
@@ -110,18 +193,31 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        Board: {
+        CredentialsRequestBody: {
+            username: string;
+            /** Format: password */
+            password: string;
+        };
+        User: {
             id: string;
-            name: string;
+            username: string;
+        };
+        AuthorizedResponse: {
+            accessToken: string;
+            user: components["schemas"]["User"];
         };
         Error: {
             message: string;
             code: string;
         };
+        Board: {
+            id: string;
+            name: string;
+        };
     };
     responses: {
-        /** @description Unauthorized */
-        UnauthorizedError: {
+        /** @description Bad data provided */
+        BadRequestError: {
             headers: {
                 [name: string]: unknown;
             };
@@ -131,6 +227,15 @@ export interface components {
         };
         /** @description Resourse not found */
         NotFoundError: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Unauthorized */
+        UnauthorizedError: {
             headers: {
                 [name: string]: unknown;
             };

@@ -2,6 +2,8 @@ import { rqClient } from "@/shared/api/client";
 import type { ApiComponents } from "@/shared/api/schema";
 import { CONFIG } from "@/shared/model/config";
 import { ROUTES } from "@/shared/model/routes"
+import { Button } from "@/shared/ui/kit/button";
+import { Card, CardFooter, CardHeader } from "@/shared/ui/kit/card";
 import { useQueryClient } from "@tanstack/react-query";
 import { href, Link } from "react-router-dom"
 
@@ -51,19 +53,26 @@ export function BoardsList() {
             <input name="Board name" id="name" type="text"></input>
             <button type="submit">Create board</button>
         </form>
-        <ul>
+        <div className="container mx-auto px-4">
             {boardsQuery.data?.map((board) => (
-                <li>
-                    <Link to={href(ROUTES.BOARD, { id: board.id })} key={board.id}>{board.name}</Link>
-                    <button
-                        disabled={deleteBoardMutation.isPending}
-                        onClick={() => onDeleteBoard(board)}
-                    >
-                        Delete board
-                    </button>
-                </li>
+                <Card>
+                    <CardHeader>
+                        <Button asChild variant="link">
+                            <Link to={href(ROUTES.BOARD, { id: board.id })} key={board.id}>{board.name}</Link>
+                        </Button>
+                    </CardHeader>
+                    <CardFooter>
+                        <Button
+                            variant="destructive"
+                            disabled={deleteBoardMutation.isPending}
+                            onClick={() => onDeleteBoard(board)}
+                        >
+                            Delete board
+                        </Button>
+                    </CardFooter>
+                </Card>
             ))}
-        </ul>
+        </div>
     </div>
 }
 

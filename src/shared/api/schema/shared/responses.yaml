@@ -25,3 +25,17 @@ NotFoundError:
     application/json:
       schema:
         $ref: '#/schemas/Error'
+
+BadRequestError:
+  description: Bad data provided
+  content:
+    application/json:
+      schema:
+        $ref: '#/schemas/Error'
+
+ExistsError:
+  description: Entity already exists
+  content:
+    application/json:
+      schema:
+        $ref: '#/schemas/Error'

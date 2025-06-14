@@ -2,26 +2,20 @@ import { HttpResponse } from "msw";
 import { http } from "../http";
 import type { ApiComponents } from "../../schema";
 
-type MiroDBState = {
-    boards: ApiComponents["schemas"]["Board"][],
-}
+const boards: ApiComponents["schemas"]["Board"][] = [
+    {
+        id: "b-1",
+        name: "TPS networking overview",
+    },
+    {
+        id: "b-2",
+        name: "CTX architecture proposal",
+    }
+]
 
-const state: MiroDBState = {
-    boards: [
-        {
-            id: "b-1",
-            name: "TPS networking overview",
-        },
-        {
-            id: "b-2",
-            name: "CTX architecture proposal",
-        }
-    ]
-}
-
-export const handlers = [
+export const boardHandlers = [
     http.get("/boards", () => {
-        return HttpResponse.json(state.boards);
+        return HttpResponse.json(boards);
     }),
     http.post("/boards", async (ctx) => {
         const payload = await ctx.request.json();
@@ -29,20 +23,20 @@ export const handlers = [
             id: crypto.randomUUID(),
             name: payload.name,
         };
-        state.boards.push(newBoard);
+        boards.push(newBoard);
         return HttpResponse.json(newBoard);
     }),
     http.delete("/boards/{id}", (ctx) => {
         const targetId = ctx.params.id;
         console.log("requested to delete targetId", targetId);
-        const boardToDeleteIdx = state.boards.findIndex((board) => board.id === targetId);
+        const boardToDeleteIdx = boards.findIndex((board) => board.id === targetId);
         if (boardToDeleteIdx === -1) {
             return HttpResponse.json(
                 { message: "Board not found", code: "NOT_FOUND" },
                 { status: 404 }
             )
         }
-        state.boards.splice(boardToDeleteIdx, 1);
+        boards.splice(boardToDeleteIdx, 1);
         return HttpResponse.json(
             { message: "Board deleted", code: "OK" },
             { status: 204 },
