@@ -12,7 +12,7 @@ schemas:
 
 getAllBoards:
   summary: All boards
-  security:
+  security: # means the request is private
     - bearerAuth: []
   responses:
     '200':

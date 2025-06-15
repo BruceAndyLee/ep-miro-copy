@@ -72,3 +72,21 @@ register:
             $ref: '#/schemas/AuthorizedResponse'
     '400':
       $ref: '../shared/responses.yaml#/BadRequestError'
+
+refresh:
+  summary: Refresh access token
+  parameters:
+  - name: refreshToken
+    in: cookie
+    required: true
+    schemas:
+      type: string
+  responses:
+    '200':
+      description: New access token returned
+      content:
+        application/json:
+          schema:
+            $ref: '#/schemas/AuthorizedResponse'
+    '401':
+      $ref: '../shared/responses.yaml#/UnauthorizedError'

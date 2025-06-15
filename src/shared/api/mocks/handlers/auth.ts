@@ -64,4 +64,7 @@ export const authHandlers = [
         );
 
     }),
+    http.post("/auth/refresh", () => {
+        
+    }),
 ];

@@ -1,6 +1,7 @@
 import { delay, HttpResponse } from "msw";
 import { http } from "../http";
 import type { ApiComponents } from "../../schema";
+import { verifyTokenOrThrow } from "../session";
 
 const boards: ApiComponents["schemas"]["Board"][] = [
     {
@@ -14,11 +15,13 @@ const boards: ApiComponents["schemas"]["Board"][] = [
 ]
 
 export const boardHandlers = [
-    http.get("/boards", async () => {
+    http.get("/boards", async (ctx) => {
+        await verifyTokenOrThrow(ctx.request);
         await delay(400)
         return HttpResponse.json(boards);
     }),
     http.post("/boards", async (ctx) => {
+
         const payload = await ctx.request.json();
         const newBoard = {
             id: crypto.randomUUID(),

@@ -3,6 +3,14 @@ info:
   title: Miro-copy API
   description: Contract for the miro board copy
   version: 0.0.1
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
 paths:
   /auth/login:
     post:
@@ -11,6 +19,10 @@ paths:
   /auth/register:
     post:
       $ref: "./endpoints/auth.yaml#/register"
+
+  /auth/refresh:
+    post:
+      $ref: "./endpoints/auth.yaml#/refresh"
 
   /boards:
     get:
