@@ -1,4 +1,4 @@
-import { HttpResponse } from "msw";
+import { delay, HttpResponse } from "msw";
 import type { ApiComponents } from "../../schema";
 import { http } from "../http";
 
@@ -34,6 +34,7 @@ export const authHandlers = [
             )
         }
         const mockedToken = checkToken(username);
+        await delay(800);
         return HttpResponse.json(
             { message: "Authorization successfull", accessToken: mockedToken, user: targetUser, code: "OK" }
         )
@@ -56,6 +57,7 @@ export const authHandlers = [
         users.push(newUser);
         userPasswords.set(username, password);
         const mockedToken = addToken(username);
+        await delay(800);
         return HttpResponse.json(
             { message: "Registration successful", accessToken: mockedToken, user: newUser,  code: "OK" },
             { status: 201 },

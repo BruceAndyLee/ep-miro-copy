@@ -1,4 +1,3 @@
-import { rqClient } from "@/shared/api/client";
 import { Button } from "@/shared/ui/kit/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/kit/form";
 import { Input } from "@/shared/ui/kit/input";
@@ -8,13 +7,23 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+// business-logic
+import { rqClient } from "@/shared/api/client";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/shared/model/routes";
+
 const loginSchema = z.object({
     username: z.string({ required_error: "required" }).min(5, "5 characters min"),
     password: z.string({ required_error: "required" }).min(8, "8 characters min")
 })
 
 export function LoginForm() {
-    const loginMutation = rqClient.useMutation("post", "/auth/login");
+    const navigate = useNavigate();
+    const loginMutation = rqClient.useMutation("post", "/auth/login", {
+        onSuccess: () => {
+            navigate(ROUTES.HOME)
+        }
+    });
 
     const form = useForm({
         resolver: zodResolver(loginSchema)

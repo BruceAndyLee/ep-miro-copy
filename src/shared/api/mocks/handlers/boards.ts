@@ -1,4 +1,4 @@
-import { HttpResponse } from "msw";
+import { delay, HttpResponse } from "msw";
 import { http } from "../http";
 import type { ApiComponents } from "../../schema";
 
@@ -14,7 +14,8 @@ const boards: ApiComponents["schemas"]["Board"][] = [
 ]
 
 export const boardHandlers = [
-    http.get("/boards", () => {
+    http.get("/boards", async () => {
+        await delay(400)
         return HttpResponse.json(boards);
     }),
     http.post("/boards", async (ctx) => {
@@ -26,7 +27,7 @@ export const boardHandlers = [
         boards.push(newBoard);
         return HttpResponse.json(newBoard);
     }),
-    http.delete("/boards/{id}", (ctx) => {
+    http.delete("/boards/{id}", async (ctx) => {
         const targetId = ctx.params.id;
         console.log("requested to delete targetId", targetId);
         const boardToDeleteIdx = boards.findIndex((board) => board.id === targetId);
@@ -37,6 +38,7 @@ export const boardHandlers = [
             )
         }
         boards.splice(boardToDeleteIdx, 1);
+        await delay(800)
         return HttpResponse.json(
             { message: "Board deleted", code: "OK" },
             { status: 204 },
