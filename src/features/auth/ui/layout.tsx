@@ -13,7 +13,7 @@ export function AuthLayout({
 }) {
     return (
         <main className="grow flex flex-col items-center pt-[200px] justify-center">
-            <Card className="w-full max-w-[400px] max-h-[400px]">
+            <Card className="w-full max-w-[400px] max-h-[500px]">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>

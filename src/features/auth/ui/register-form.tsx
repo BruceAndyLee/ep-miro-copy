@@ -1,4 +1,3 @@
-import { rqClient } from "@/shared/api/client";
 import { Button } from "@/shared/ui/kit/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/kit/form";
 import { Input } from "@/shared/ui/kit/input";
@@ -6,8 +5,8 @@ import { useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "@/shared/model/routes";
+import { useRegister } from "../model/use-register";
+
 
 const registerSchema = z.object({
   username: z.string({ required_error: "required" }).min(6, "6 characters min"),
@@ -23,20 +22,13 @@ const registerSchema = z.object({
 
 export function RegisterForm() {
 
-  const navigate = useNavigate();
-  const loginMutation = rqClient.useMutation("post", "/auth/register", {
-    onSuccess: () => {
-      navigate(ROUTES.LOGIN);
-    }
-  });
+  const { register, isPending, errorMessage } = useRegister();
 
   const form = useForm({
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = form.handleSubmit((data) => {
-    loginMutation.mutate({ body: data });
-  })
+  const onSubmit = form.handleSubmit(register)
 
   return (
     <Form {...form}>
@@ -80,7 +72,10 @@ export function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        {errorMessage && (
+          <p className="text-destructive text-sm">{errorMessage}</p>
+        )}
+        <Button disabled={isPending} type="submit">Submit</Button>
       </form>
     </Form>
   )
