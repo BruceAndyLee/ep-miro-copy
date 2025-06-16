@@ -1,4 +1,4 @@
-import { rqClient } from "@/shared/api/db-clients";
+import { rqClient } from "@/shared/api/rest-clients";
 import type { ApiComponents } from "@/shared/api/schema";
 import { CONFIG } from "@/shared/model/config";
 import { ROUTES } from "@/shared/model/routes"

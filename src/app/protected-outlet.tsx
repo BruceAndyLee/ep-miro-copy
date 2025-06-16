@@ -1,5 +1,5 @@
 import { ROUTES } from "@/shared/model/routes";
-import { useSession } from "@/shared/model/session";
+import { useSession } from "@/shared/model/use-session";
 import { Navigate, Outlet } from "react-router-dom";
 
 export function ProtectedOutlet() {

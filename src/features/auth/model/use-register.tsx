@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/model/routes";
-import { publicrqClient } from "@/shared/api/db-clients";
-import { useSession } from "@/shared/model/session";
+import { publicrqClient } from "@/shared/api/rest-clients";
+import { useSession } from "@/shared/model/use-session";
 
 export function useRegister() {
 

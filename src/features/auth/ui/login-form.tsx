@@ -8,10 +8,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // business-logic
-import { publicrqClient } from "@/shared/api/db-clients";
+import { publicrqClient } from "@/shared/api/rest-clients";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/model/routes";
-import { useSession } from "@/shared/model/session";
+import { useSession } from "@/shared/model/use-session";
 
 const loginSchema = z.object({
     username: z.string({ required_error: "required" }).min(5, "5 characters min"),
