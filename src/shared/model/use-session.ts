@@ -87,6 +87,8 @@ export const useSession = createGStore(() => {
 
       return await refreshTokenPromise;
     }
+
+    return token
   }
 
   // to get the current user

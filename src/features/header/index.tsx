@@ -8,6 +8,10 @@ export function Header() {
     const { session, logout } = useSession()
     const navigate = useNavigate();
 
+    // otherwise the header shows for a split second before the UI is redirected to login
+    if (!session)
+        return null;
+
     return (
         <header className="bg-background flex flex-row w-100">
             <p>EP miro-copy</p>
