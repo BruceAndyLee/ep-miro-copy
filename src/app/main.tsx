@@ -5,14 +5,7 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 
 import { router } from "./router";
-
-async function enableHttpMocks() {
-  if (import.meta.env.PROD) return;
-
-  // this lets us ignore js-chunks with mocks when in prod 
-  const { worker } = await import("@/shared/api/mocks/browser");
-  worker.start();
-}
+import { enableHttpMocks } from "@/shared/api/mocks";
 
 enableHttpMocks().then(() => {
   createRoot(document.getElementById("root")!).render(

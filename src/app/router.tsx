@@ -3,7 +3,7 @@ import { App } from "./app";
 import { ROUTES } from "@/shared/model/routes";
 import { Providers } from "./providers";
 import { Header } from "@/features/header";
-import { ProtectedOutlet } from "./protected-outlet";
+import { ProtectedLoader, ProtectedOutlet } from "./protected-outlet";
 
 export const router = createBrowserRouter([
     {
@@ -14,6 +14,11 @@ export const router = createBrowserRouter([
         ),
         children: [
             {
+                // why is it not a jsx-like component but a function?..
+                // loaders are initiated BEFORE any of the react is rendered
+                // so the msw init logic is not yet run when this loader is evaluated.
+                // THUS, the mock-init logic must be run both from app.tsx and from the ProtectedLoader function
+                loader: ProtectedLoader,
                 element: (
                     <>
                         <Header />
