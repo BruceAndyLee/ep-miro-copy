@@ -1,4 +1,4 @@
-import { rqClient } from "@/shared/api/client";
+import { rqClient } from "@/shared/api/db-clients";
 import type { ApiComponents } from "@/shared/api/schema";
 import { CONFIG } from "@/shared/model/config";
 import { ROUTES } from "@/shared/model/routes"
@@ -12,7 +12,7 @@ export function BoardsList() {
     const apiURL = CONFIG.API_BASE_URL;
 
     const queryClient = useQueryClient();
-    const boardsQuery = rqClient.useQuery("get", "/boards");
+    const boardsQuery = rqClient.useQuery("get", "/boards", { headers: {  } });
 
     const createBoardMutation = rqClient.useMutation("post", "/boards", {
         onSettled: async () => {

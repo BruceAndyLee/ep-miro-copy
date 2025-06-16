@@ -8,9 +8,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // business-logic
-import { rqClient } from "@/shared/api/client";
+import { publicrqClient } from "@/shared/api/db-clients";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/model/routes";
+import { useSession } from "@/shared/model/session";
 
 const loginSchema = z.object({
     username: z.string({ required_error: "required" }).min(5, "5 characters min"),
@@ -18,9 +19,13 @@ const loginSchema = z.object({
 })
 
 export function LoginForm() {
+    
+    const session = useSession();
     const navigate = useNavigate();
-    const loginMutation = rqClient.useMutation("post", "/auth/login", {
-        onSuccess: () => {
+    const loginMutation = publicrqClient.useMutation("post", "/auth/login", {
+        onSuccess: (data) => {
+            console.log("login: access token", data.accessToken);
+            session.login(data.accessToken)
             navigate(ROUTES.HOME)
         }
     });
@@ -30,6 +35,7 @@ export function LoginForm() {
     });
 
     const onSubmit = form.handleSubmit((data) => {
+        console.log("mutation!", { body: data });
         loginMutation.mutate({ body: data })
     });
 

@@ -1,7 +1,7 @@
 import { delay, HttpResponse } from "msw";
 import { http } from "../http";
 import type { ApiComponents } from "../../schema";
-import { verifyTokenOrThrow } from "../session";
+import { verifyRequestAuthHeader } from "../session";
 
 const boards: ApiComponents["schemas"]["Board"][] = [
     {
@@ -16,12 +16,13 @@ const boards: ApiComponents["schemas"]["Board"][] = [
 
 export const boardHandlers = [
     http.get("/boards", async (ctx) => {
-        await verifyTokenOrThrow(ctx.request);
+        await verifyRequestAuthHeader(ctx.request);
+
         await delay(400)
         return HttpResponse.json(boards);
     }),
     http.post("/boards", async (ctx) => {
-
+        await verifyRequestAuthHeader(ctx.request);
         const payload = await ctx.request.json();
         const newBoard = {
             id: crypto.randomUUID(),
@@ -31,6 +32,7 @@ export const boardHandlers = [
         return HttpResponse.json(newBoard);
     }),
     http.delete("/boards/{id}", async (ctx) => {
+        await verifyRequestAuthHeader(ctx.request);
         const targetId = ctx.params.id;
         console.log("requested to delete targetId", targetId);
         const boardToDeleteIdx = boards.findIndex((board) => board.id === targetId);

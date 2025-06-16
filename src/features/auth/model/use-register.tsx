@@ -1,11 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/model/routes";
-import { rqClient } from "@/shared/api/client";
+import { publicrqClient } from "@/shared/api/db-clients";
+import { useSession } from "@/shared/model/session";
 
 export function useRegister() {
+
+  const session = useSession();
   const navigate = useNavigate();
-  const registerMutation = rqClient.useMutation("post", "/auth/register", {
-    onSuccess: () => {
+  const registerMutation = publicrqClient.useMutation("post", "/auth/register", {
+    onSuccess: (data) => {
+      // this will update global state and make login-info accessible to the entire app
+      session.login(data.accessToken)
       navigate(ROUTES.LOGIN);
     }
   });

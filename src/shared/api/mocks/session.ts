@@ -35,7 +35,7 @@ export async function generateTokens(session: Session) {
   return { accessToken, refreshToken };
 }
 
-async function verifyToken(token: string): Promise<Session> {
+export async function verifyToken(token: string): Promise<Session> {
   const { payload } = await jwtVerify(token, JWT_SECRET);
   return payload as Session;
 }
@@ -45,7 +45,7 @@ async function verifyToken(token: string): Promise<Session> {
  * @param request 
  * @returns 
  */
-export async function verifyTokenOrThrow(request: Request): Promise<Session> {
+export async function verifyRequestAuthHeader(request: Request): Promise<Session> {
   const token = request.headers.get("Authorization")?.split(" ")[1];
   const session = token ? await verifyToken(token).catch(() => null) : null;
   if (!session) {
