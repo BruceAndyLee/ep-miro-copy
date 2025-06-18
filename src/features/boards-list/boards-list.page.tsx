@@ -12,7 +12,7 @@ export function BoardsList() {
     const apiURL = CONFIG.API_BASE_URL;
 
     const queryClient = useQueryClient();
-    const boardsQuery = rqClient.useQuery("get", "/boards", { headers: {  } });
+    const boardsQuery = rqClient.useQuery("get", "/boards");
 
     const createBoardMutation = rqClient.useMutation("post", "/boards", {
         onSettled: async () => {

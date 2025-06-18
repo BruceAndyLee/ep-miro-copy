@@ -136,7 +136,14 @@ export interface paths {
         /** All boards */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    offset?: number;
+                    limit?: number;
+                    sortBy?: "lastOpenedAt" | "createdAt" | "updatedAt" | "isFavourite" | "name";
+                    order?: "asc" | "desc";
+                    isFavourite?: string;
+                    search?: string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -149,7 +156,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Board"][];
+                        "application/json": components["schemas"]["BoardListResponse"];
                     };
                 };
                 401: components["responses"]["UnauthorizedError"];
@@ -164,13 +171,7 @@ export interface paths {
                 path?: never;
                 cookie?: never;
             };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        name: string;
-                    };
-                };
-            };
+            requestBody?: never;
             responses: {
                 /** @description Board created successfully */
                 201: {
@@ -190,7 +191,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/boards/{id}": {
+    "/boards/{id}/favourite": {
         parameters: {
             query?: never;
             header?: never;
@@ -198,6 +199,118 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update board name */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["RenameBoardPayload"];
+                };
+            };
+            responses: {
+                /** @description Board updated successfully */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Board"];
+                    };
+                };
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+            };
+        };
+        trace?: never;
+    };
+    "/boards/{id}/rename": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update board name */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateBoardFavouritePayload"];
+                };
+            };
+            responses: {
+                /** @description Board favourite updated */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Board"];
+                    };
+                };
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+            };
+        };
+        trace?: never;
+    };
+    "/boards/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** All boards */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Board fetched */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Board"];
+                    };
+                };
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+            };
+        };
         put?: never;
         post?: never;
         /** Delete a board */
@@ -252,6 +365,23 @@ export interface components {
         Board: {
             id: string;
             name: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            lastOpenedAt: string;
+            isFavourite: boolean;
+        };
+        BoardListResponse: {
+            data: components["schemas"]["Board"][];
+            total: number;
+        };
+        RenameBoardPayload: {
+            name: string;
+        };
+        UpdateBoardFavouritePayload: {
+            isFavourite: boolean;
         };
     };
     responses: {

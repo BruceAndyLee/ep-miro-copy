@@ -4,43 +4,140 @@ schemas:
     required:
       - id
       - name
+      - createdAt
+      - updatedAt
+      - lastOpenedAt
+      - isFavourite
     properties:
       id:
         type: string
       name:
         type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      lastOpenedAt:
+        type: string
+        format: date-time
+      isFavourite:
+        type: boolean
+  RenameBoardPayload:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+  UpdateBoardFavouritePayload:
+    type: object
+    required:
+      - isFavourite
+    properties:
+      isFavourite:
+        type: boolean
+  BoardListResponse:
+    type: object
+    required:
+      - data
+      - total
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/schemas/Board'
+      total:
+        type: integer
+    
 
 getAllBoards:
   summary: All boards
   security: # means the request is private
     - bearerAuth: []
+  parameters:
+    - name: offset
+      in: query # <- the query params
+      required: false
+      schema:
+        type: integer
+        default: 1
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 10
+    - name: sortBy
+      in: query
+      required: false
+      schema:
+        type: string
+        default: lastOpenedAt
+        enum:
+          - lastOpenedAt
+          - createdAt
+          - updatedAt
+          - isFavourite
+          - name
+    - name: order
+      in: query
+      required: false
+      schema:
+        type: string
+        default: desc
+        enum:
+          - asc
+          - desc
+    - name: isFavourite
+      in: query
+      required: false
+      schemas:
+        type: boolean
+    - name: search
+      in: query
+      required: false
+      schemas:
+        type: string
   responses:
     '200':
       description: List of all boards
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '#/schemas/Board'
+            $ref: "#/schemas/BoardListResponse"
     '401':
       $ref: '../shared/responses.yaml#/UnauthorizedError'
 
+getBoard:
+  summary: All boards
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: Board fetched
+      content:
+        application/json:
+          schema:
+            $ref: '#/schemas/Board'
+    '401':
+      $ref: '../shared/responses.yaml#/UnauthorizedError'
+    '404':
+      $ref: '../shared/responses.yaml#/NotFoundError'
+
+# this request does not have a body 
+# because the board is created empty
 createBoard:
   summary: Create a board
   security: 
     - bearerAuth: []
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - name
-          properties:
-            name:
-              type: string
   responses:
     '201':
       description: Board created successfully
@@ -50,6 +147,62 @@ createBoard:
             $ref: '#/schemas/Board'
     '401':
       $ref: '../shared/responses.yaml#/UnauthorizedError'
+
+updateBoardName:
+  summary: Update board name
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    requred: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/schemas/RenameBoardPayload"
+  responses:
+    '201':
+      description: Board updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '#/schemas/Board'
+    '401':
+      $ref: '../shared/responses.yaml#/UnauthorizedError'
+    '404':
+      $ref: '../shared/responses.yaml#/NotFoundError'
+
+updateBoardFavourite:
+  summary: Update board name
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    requred: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/schemas/UpdateBoardFavouritePayload"
+  responses:
+    '201':
+      description: Board favourite updated
+      content:
+        application/json:
+          schema:
+            $ref: '#/schemas/Board'
+    '401':
+      $ref: '../shared/responses.yaml#/UnauthorizedError'
+    '404':
+      $ref: '../shared/responses.yaml#/NotFoundError'
 
 deleteBoard:
   summary: Delete a board
