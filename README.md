@@ -12,3 +12,9 @@ generate a service worker under the /public directory so that the front can load
 npx msw init public --save
 ```
 
+generate msw-openapi compatible schema to be passed down to the client generator and the msw http wrapper, that knows how to apply the schema typing to it
+
+```
+npx openapi-typescript ./src/shared/api/schema/main.yaml -o ./src/shared/api/schema/generated.ts
+```
+
